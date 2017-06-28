@@ -17,6 +17,7 @@
 class Waypoint {
 
 private:
+
 	int waypoint_num;
 	int x;
 	int y;

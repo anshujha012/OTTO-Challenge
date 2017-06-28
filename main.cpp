@@ -7,6 +7,7 @@
 //sample_input_medium.txt
 
 #include "Waypoint.h"
+#include "Otto.h"
 
 using namespace std;
 
@@ -19,17 +20,18 @@ string tokenize_string(string *s);
 int main() {
 
 	Waypoint Waypoints[MAXWAYPOINTSETS][MAXWAYPOINTS];
+  Otto Robot;
 
-  	parse_text_file(Waypoints);
+  parse_text_file(Waypoints);
 
-  	for (int i = 0; i < MAXWAYPOINTSETS; i++) {
-  		for (int j = 0; j < MAXWAYPOINTSETS; j++) {
-  			if (Waypoints[i][j].GetWaypoint_Num() > 0)
-	    		Waypoints[i][j].print_waypoint(); 
-  		}	   	
-    }
+  for (int i = 0; i < MAXWAYPOINTSETS; i++) {
+  	for (int j = 0; j < MAXWAYPOINTSETS; j++) {
+  		if (Waypoints[i][j].GetWaypoint_Num() > 0)
+	   		Waypoints[i][j].print_waypoint(); 
+  	}	   	
+  }
 
-  	return 1;
+  return 1;
 }
 
 //Text file Functions
@@ -67,8 +69,9 @@ void parse_text_file(Waypoint (&Waypoints)[MAXWAYPOINTSETS][MAXWAYPOINTS]) {
 
 string get_text_file_name() {
 
-	string input = "sample_input_large.txt";
-	//cout << "Text file name (include '.txt'): \n> ";
+	string input = "sample_input_small.txt";
+	//string input = "";
+  //cout << "Text file name (include '.txt'): \n> ";
  	//getline(cin, input);
  	return input;
 }
