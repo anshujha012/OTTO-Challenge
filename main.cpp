@@ -23,7 +23,7 @@ int total_sets = 0;
 
 int main() {
 
-	Waypoint Waypoints[MAXWAYPOINTSETS][MAXWAYPOINTS];
+  Waypoint Waypoints[MAXWAYPOINTSETS][MAXWAYPOINTS];
   Otto Robot;
   int x1, y1, penalty1, x2, y2, penalty2, x3, y3 = 0;
   int path_route = 0;
@@ -80,7 +80,6 @@ int main() {
       cout << round(Robot.GetElapsed_Time() * 1000)/1000 << endl;
     }
   }
-
   return 1;
 }
 
@@ -142,10 +141,9 @@ void set_waypoint_info(Waypoint &Waypoints, int waypoint_num, int x, int y, int 
 
 string get_text_file_name() {
 
-	string input = "sample_input_small.txt";
-	//string input = "";
-  //cout << "Text file name (include '.txt'): \n> ";
- 	//getline(cin, input);
+	string input = "";
+  cout << "Text file name (include '.txt'): \n> ";
+ 	getline(cin, input);
  	return input;
 }
 
