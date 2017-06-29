@@ -17,6 +17,7 @@ string get_text_file_name();
 void open_text_file(string filename, ifstream &file);
 string tokenize_string(string *s);
 void set_waypoint_info(Waypoint &Waypoints, int waypoint_num, int x, int y, int penalty, int total_waypoints);
+void add_time(Otto &Robot, float travel_time, int penalty);
 
 int total_sets = 0;
 
@@ -24,9 +25,9 @@ int main() {
 
 	Waypoint Waypoints[MAXWAYPOINTSETS][MAXWAYPOINTS];
   Otto Robot;
-  int x1, y1, penalty1, x2, y2 = 0;
+  int x1, y1, penalty1, x2, y2 , x3, y3= 0;
   int path_route = 0;
-  float elapsed_time = 0.0;
+  
   int waypoint_count = 0;
 
   parse_text_file(Waypoints);
@@ -55,36 +56,37 @@ int main() {
       x2 = Waypoints[i][j+1].GetX();
       y2 = Waypoints[i][j+1].GetY(); 
 
-      path_route = Robot.calculate_quickest_path(x1, y1, penalty1, x2, y2);
+      //Get the next point's next coordinates
+      x3 = Waypoints[i][j+2].GetX();
+      y3 = Waypoints[i][j+2].GetY(); 
+
+      path_route = Robot.calculate_quickest_path(x1, y1, penalty1, x2, y2, x3, y3);
   
       if (path_route == 1) {
 
         //Best path is the adjacent point, move there
-        //Elapsed time is 10s for the wait + the walking time, no penalty
-        elapsed_time += Robot.calculate_elapsed_time(Robot.distance_to_point(x1, y1));
-        elapsed_time += WAYPOINTWAITTIME;
+        add_time(Robot, Robot.calculate_elapsed_time(Robot.distance_to_point(x1, y1)), 0);
         Robot.move_to_point(x1, y1);
       } else if (path_route == 2) {
 
-        
-        elapsed_time += Robot.calculate_elapsed_time(Robot.distance_to_point(x2, y2));
-        elapsed_time += WAYPOINTWAITTIME;
-        elapsed_time += (float)penalty1;
+        //Best path is to skip the adjacent point, move there
+        add_time(Robot, Robot.calculate_elapsed_time(Robot.distance_to_point(x1, y1)), penalty1);
         Robot.move_to_point(x2, y2);
       }
       
       if (Robot.GetPos_X() == 0 && Robot.GetPos_Y() == 0) {
 
-        cout << "Time: " << elapsed_time << endl;
+        cout << round(Robot.GetElapsed_Time() * 1000)/1000 << endl;
       }
-
-      //Waypoints[i][j].print_waypoint();
-      //cout << x1 << "," << y1 << " " << penalty1 << "  Next point: " << x2 << "," << y2 << "  " << elapsed_time << endl;
-
     }
   }
 
   return 1;
+}
+
+void add_time(Otto &Robot, float travel_time, int penalty) {
+
+  Robot.increment_elapsed_time(travel_time + (float)penalty + WAYPOINTWAITTIME);
 }
 
 //Text file Functions
@@ -108,7 +110,6 @@ void parse_text_file(Waypoint (&Waypoints)[MAXWAYPOINTSETS][MAXWAYPOINTS]) {
 
             //Append the (100,100) to the end of the list
             set_waypoint_info(Waypoints[waypoint_set_index][waypoint_index], waypoint_index+1, ENDPOINTX, ENDPOINTY, 0, total_waypoints);
-            //cout << "adding 100,100\n";
           } 
 
         	//A new set of waypoints is going to be saved
@@ -163,11 +164,17 @@ string tokenize_string(string *s) {
 	string token = "";
 
 	//create a substring from the start of the string to the space
-    pos = s->find(" ");
-    token = s->substr(0, pos);
+  pos = s->find(" ");
+  token = s->substr(0, pos);
     
-    //Erase the substring
-    s->erase(0, pos + 1);
+  //Erase the substring
+  s->erase(0, pos + 1);
 
-    return token;
+  return token;
+}
+
+double round(double val)
+{
+  if( val < 0 ) return ceil(val - 0.5);
+  return floor(val + 0.5);
 }

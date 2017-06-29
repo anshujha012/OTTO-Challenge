@@ -38,7 +38,7 @@ Otto::~Otto(void) {
 }
 
 //Accessors
-const int Otto::GetElapsed_Time(void) {
+const float Otto::GetElapsed_Time(void) {
 
 	return elapsed_time;
 }
@@ -54,7 +54,7 @@ const int Otto::GetPos_Y(void) {
 }
 
 //Mutators
-bool Otto::SetElapsedTime(int new_num) {
+bool Otto::SetElapsedTime(float new_num) {
 
 	elapsed_time = new_num;
 	return true;
@@ -72,7 +72,7 @@ bool Otto::SetPos_Y(int new_num) {
 	return true;
 }
 
-void Otto::increment_elapsed_time(int num) {
+void Otto::increment_elapsed_time(float num) {
 
 	elapsed_time += num;	
 }
@@ -89,7 +89,7 @@ void Otto::move_to_point(int x, int y) {
 	SetPos_Y(y);
 }
 
-int Otto::calculate_quickest_path(int x1, int y1, int penalty1, int x2, int y2) {
+int Otto::calculate_quickest_path(int x1, int y1, int penalty1, int x2, int y2, int x3, int y3) {
 
 	float distance_to_point = 0.0;
 	float distance_to_next_point = 0.0;
@@ -98,25 +98,19 @@ int Otto::calculate_quickest_path(int x1, int y1, int penalty1, int x2, int y2) 
 
 	distance_to_point = Otto::distance_to_point(x1,y1);
 	distance_to_next_point = Otto::distance_to_point(x2,y2);
-	
-	cout << "Calculating: " << pos_x << "," << pos_y << " to " << x1 << "," << y1 << endl; 
-	cout << "d1= " << distance_to_point << "  d2= " << distance_to_next_point << endl;
 
 	time_to_point = calculate_elapsed_time(distance_to_point);
 	time_to_next_point = calculate_elapsed_time(distance_to_next_point);
-	cout << "t1= " << time_to_point << "  t2= " << time_to_next_point << endl;
 
 	if(time_to_point < (time_to_next_point + penalty1)) {
 
 		//Return 1 to move to the next waypoint
-		cout << "MOVED TO ADJACENT POINT\n";
 		return 1;
 	} else {
 
 		//Return 2 to skip the next waypoint
 		//Penalty + move time is less then the move time to the adjacent waypoint
 		//If the two times are equal, we want to move to the furthest point to be efficient
-		cout << "SKIPPED ADJACENT POINT\n";
 		return 2;
 	}
 }
