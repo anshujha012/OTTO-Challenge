@@ -51,4 +51,6 @@ public:
 	float calculate_elapsed_time(float distance);
 
 	void reset_otto(void);
+
+	float distance_between_points(int x1, int y1, int x2, int y2); 
 };

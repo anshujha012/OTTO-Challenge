@@ -37,15 +37,10 @@ int main() {
 
     //Get how many waypoints are in this set
     waypoint_count = Waypoints[i][0].GetTotal_Waypoints();
+    Robot.reset_otto();
 
     //Iterate the waypoints within the set
     for (int j = 0; j < waypoint_count; j++) {
-
-      if (Waypoints[i][j].GetWaypoint_Num() == 1) {
-
-        //Reset Otto to (0,0) and t=0 since this is the first waypoint within the set
-        Robot.reset_otto();
-      }
 
       //Get adjacent point coordinates
       x1 = Waypoints[i][j].GetX();
@@ -73,12 +68,15 @@ int main() {
         add_time(Robot, Robot.calculate_elapsed_time(Robot.distance_to_point(x1, y1)), penalty1);
         Robot.move_to_point(x2, y2);
       }
-      
-      if (Robot.GetPos_X() == 0 && Robot.GetPos_Y() == 0) {
-
-        cout << round(Robot.GetElapsed_Time() * 1000)/1000 << endl;
-      }
     }
+
+    if (i > 0) {
+
+      cout.setf(ios::fixed,ios::floatfield);
+      cout.precision(3);
+      cout << round(Robot.GetElapsed_Time() * 1000)/1000 << endl;
+    }
+
   }
 
   return 1;
@@ -142,7 +140,7 @@ void set_waypoint_info(Waypoint &Waypoints, int waypoint_num, int x, int y, int 
 
 string get_text_file_name() {
 
-	string input = "sample_input_small.txt";
+	string input = "sample_input_medium.txt";
 	//string input = "";
   //cout << "Text file name (include '.txt'): \n> ";
  	//getline(cin, input);
