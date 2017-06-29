@@ -25,22 +25,23 @@ int main() {
 
 	Waypoint Waypoints[MAXWAYPOINTSETS][MAXWAYPOINTS];
   Otto Robot;
-  int x1, y1, penalty1, x2, y2 , x3, y3= 0;
+  int x1, y1, penalty1, x2, y2 , x3, y3 = 0;
   int path_route = 0;
+  int i, j = 0;
   
   int waypoint_count = 0;
 
   parse_text_file(Waypoints);
 
   //Iterate the sets of waypoints
-  for (int i = 0; i < total_sets; i++) {
+  for (i = 0; i < total_sets; i++) {
 
     //Get how many waypoints are in this set
     waypoint_count = Waypoints[i][0].GetTotal_Waypoints();
     Robot.reset_otto();
 
     //Iterate the waypoints within the set
-    for (int j = 0; j < waypoint_count; j++) {
+    for (j = 0; j < waypoint_count; j++) {
 
       //Get adjacent point coordinates
       x1 = Waypoints[i][j].GetX();
