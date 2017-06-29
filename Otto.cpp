@@ -77,12 +77,10 @@ void Otto::increment_elapsed_time(int num) {
 	elapsed_time += num;	
 }
 
-int Otto::distance_to_point(int x, int y) {
+float Otto::distance_to_point(int x, int y) {
 
 	//Calculate the distance between the robot's position and the future position
-	//cout << GetPos_X() << "," << GetPos_Y() << " to " << x << "," << y << " " << endl;
-	
-	//cout << sqrt((pos_x - x)^2 + (pos_y - y)^2) << endl; 
+	cout << "Calculating: " << pos_x << "," << pos_y << " to " << x << "," << y << endl; 
 	return sqrt((pos_x - x)^2 + (pos_y - y)^2);
 }
 
@@ -94,17 +92,15 @@ void Otto::move_to_point(int x, int y) {
 
 int Otto::calculate_quickest_path(int x1, int y1, int penalty1, int x2, int y2) {
 
-	int distance_to_point = 0.0;
-	int distance_to_next_point = 0.0;
+	float distance_to_point = 0.0;
+	float distance_to_next_point = 0.0;
 	float time_to_point = 0;
 	float time_to_next_point = 0;
 
 	distance_to_point = Otto::distance_to_point(x1,y1);
 	distance_to_next_point = Otto::distance_to_point(x2,y2);
-
-	//cout << "d1 = " << distance_to_point;
-	//cout << "  d2 = " << distance_to_next_point << endl;
 	
+	cout << "d1= " << distance_to_point << "  d2= " << distance_to_next_point << endl;
 
 	time_to_point = calculate_elapsed_time(distance_to_point);
 	time_to_next_point = calculate_elapsed_time(time_to_next_point);
@@ -112,14 +108,12 @@ int Otto::calculate_quickest_path(int x1, int y1, int penalty1, int x2, int y2) 
 	if(time_to_point < (time_to_next_point + penalty1)) {
 
 		//Return 1 to move to the next waypoint
-		//cout << "Chose next\n";
 		return 1;
 	} else {
 
 		//Return 2 to skip the next waypoint
 		//Penalty + move time is less then the move time to the adjacent waypoint
 		//If the two times are equal, we want to move to the furthest point to be efficient
-		//cout << "Chose skip\n";
 		return 2;
 	}
 }
@@ -132,6 +126,6 @@ float Otto::calculate_elapsed_time(float distance) {
 
 void Otto::reset_otto(void) {
 
-	move_to_point(0,0);
+	move_to_point(0, 0);
 	SetElapsedTime(0);
 }

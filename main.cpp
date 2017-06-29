@@ -16,6 +16,7 @@ void parse_text_file(Waypoint (&Waypoints)[MAXWAYPOINTSETS][MAXWAYPOINTS]);
 string get_text_file_name();
 void open_text_file(string filename, ifstream &file);
 string tokenize_string(string *s);
+void set_waypoint_info(Waypoint &Waypoints, int waypoint_num, int x, int y, int penalty, int total_waypoints);
 
 int total_sets = 0;
 
@@ -45,70 +46,39 @@ int main() {
         Robot.reset_otto();
       }
 
+      //Get adjacent point coordinates
       x1 = Waypoints[i][j].GetX();
-      y1 =  Waypoints[i][j].GetY();
+      y1 =  Waypoints[i][j].GetY();  
       penalty1 = Waypoints[i][j].GetPenalty();
 
-      //Check if the next element in the array is a valid coordinate
-      if (Waypoints[i][j+1].GetWaypoint_Num() != 0) {
-
-        //Get the next point after the adjacent one's coordinate
-        x2 = Waypoints[i][j+1].GetX();
-        y2 = Waypoints[i][j+1].GetY();
-      } else if (Waypoints[i][j+1].GetWaypoint_Num() == 0) {
-
-        //Reached the end of the set list, next point is (100,100)
-        x2 = 100;
-        y2 = 100;
-      }
+      //Get the next point's coordinates
+      x2 = Waypoints[i][j+1].GetX();
+      y2 = Waypoints[i][j+1].GetY(); 
 
       path_route = Robot.calculate_quickest_path(x1, y1, penalty1, x2, y2);
+  
+      //elapsed_time = Robot.calculate_elapsed_time(Robot.distance_to_point(x1, y1));
 
-      cout << x1 << "," << y1 << " " << penalty1 << "  Next point: " << x2 << "," << y2 << " " << path_route << endl;
+      if (path_route == 1) {
+
+        //Best path is the adjacent point, move there
+        //Elapsed time is 10s for the wait + the walking time, no penalty
+        Robot.move_to_point(x1, y1);
+      } else if (path_route == 2) {
+
+        Robot.move_to_point(x2, y2);
+      }
+      
+      if (Robot.GetPos_X() == 0 && Robot.GetPos_Y() == 0) {
+
+        cout << "FINISHED\n";
+      }
+
+      //Waypoints[i][j].print_waypoint();
+      //cout << x1 << "," << y1 << " " << penalty1 << "  Next point: " << x2 << "," << y2 << "  " << elapsed_time << endl;
 
     }
   }
-
-
-
-
-
-  /*for (int i = 0; i < MAXWAYPOINTSETS; i++) {
-  	for (int j = 0; j < MAXWAYPOINTSETS; j++) {
-
-      if (Waypoints[i][j].GetWaypoint_Num() > 0) {
-
-        if (Waypoints[i][j].GetWaypoint_Num() == 1) {
-
-          //Waypoints[i][j].print_waypoint();
-          //Save Otto's info and reset him for next set of waypoints once a new set is reached
-          cout << "-------------------" << endl;
-          //cout << "Robot: " << Robot.GetPos_X() << "," << Robot.GetPos_Y() << endl;
-          //cout << Robot.GetElapsed_Time() << endl;
-          Robot.reset_otto();
-        } 
-
-        x1 = Waypoints[i][j].GetX();
-        y1 =  Waypoints[i][j].GetY();
-        penalty1 = Waypoints[i][j].GetPenalty();
-        
-        if(Waypoints[i][j+1].GetWaypoint_Num() != 0) {
-
-          //Get the next point after the adjacent one's coords
-          x2 = Waypoints[i][j+1].GetX();
-          y2 = Waypoints[i][j+1].GetY();
-        } else {
-
-          //Reached the end of the set list, next point is (100,100)
-          x2 = 100;
-          y2 = 100;
-        } */   
-          
-        //cout << x1 << "," << y1 << " " << penalty1 << "  Next point: " << x2 << "," << y2 << endl;
-       
-      //}
-    //}
-  //}
 
   return 1;
 }
@@ -130,19 +100,25 @@ void parse_text_file(Waypoint (&Waypoints)[MAXWAYPOINTSETS][MAXWAYPOINTS]) {
         //Find the line with only 1 number on it, that is the new set of waypoints
         if(line_contents.find(" ") == std::string::npos) {
 
+          if(waypoint_set_index != 0) {
+
+            //Append the (100,100) to the end of the list
+            set_waypoint_info(Waypoints[waypoint_set_index][waypoint_index], waypoint_index+1, ENDPOINTX, ENDPOINTY, 0, total_waypoints);
+            //cout << "adding 100,100\n";
+          } 
+
         	//A new set of waypoints is going to be saved
         	waypoint_set_index++;
         	waypoint_index = 0; 
-          total_waypoints = atoi(line_contents.c_str());
+
+          //Add 1 to make up for the added (100,100)
+          total_waypoints = atoi(line_contents.c_str()) + 1;
           total_sets++;
         } else {
 	
         	//Insert waypoint into array for current set index, then increase the waypoint index to insert next waypoint
-        	Waypoints[waypoint_set_index][waypoint_index].SetWaypoint_Num(waypoint_index+1);
-        	Waypoints[waypoint_set_index][waypoint_index].SetX(atoi(tokenize_string(&line_contents).c_str()));
-        	Waypoints[waypoint_set_index][waypoint_index].SetY(atoi(tokenize_string(&line_contents).c_str()));
-        	Waypoints[waypoint_set_index][waypoint_index].SetPenalty(atoi(tokenize_string(&line_contents).c_str()));
-          Waypoints[waypoint_set_index][waypoint_index].SetTotal_Waypoints(total_waypoints);
+          set_waypoint_info(Waypoints[waypoint_set_index][waypoint_index], waypoint_index+1, atoi(tokenize_string(&line_contents).c_str()), 
+              atoi(tokenize_string(&line_contents).c_str()), atoi(tokenize_string(&line_contents).c_str()), total_waypoints);
         	waypoint_index++;
         }
     }
@@ -150,9 +126,18 @@ void parse_text_file(Waypoint (&Waypoints)[MAXWAYPOINTSETS][MAXWAYPOINTS]) {
 	text_file.close();
 }
 
+void set_waypoint_info(Waypoint &Waypoints, int waypoint_num, int x, int y, int penalty, int total_waypoints) {
+
+  Waypoints.SetWaypoint_Num(waypoint_num);
+  Waypoints.SetX(x);
+  Waypoints.SetY(y);
+  Waypoints.SetPenalty(penalty);
+  Waypoints.SetTotal_Waypoints(total_waypoints);
+}
+
 string get_text_file_name() {
 
-	string input = "sample_input_medium.txt";
+	string input = "sample_input_small.txt";
 	//string input = "";
   //cout << "Text file name (include '.txt'): \n> ";
  	//getline(cin, input);
