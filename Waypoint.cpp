@@ -39,6 +39,12 @@ const int Waypoint::GetPenalty(void) {
 	return penalty;
 }
 
+const int Waypoint::GetTotal_Waypoints(void) {
+
+	return total_waypoints;
+}
+
+
 //Mutators
 bool Waypoint::SetWaypoint_Num(int new_waypoint_num) {
 
@@ -64,6 +70,12 @@ bool Waypoint::SetPenalty(int new_penalty) {
 	return true;
 }
 
+bool Waypoint::SetTotal_Waypoints(int new_total_waypoints) {
+	
+	total_waypoints = new_total_waypoints;
+	return true;
+}
+
 void Waypoint::print_waypoint(void) {
 
 	cout << "Waypoint Number:" << GetWaypoint_Num() << " ";
@@ -71,3 +83,5 @@ void Waypoint::print_waypoint(void) {
 	cout << "Y:" << GetY() << " ";
 	cout << "Penalty:" << GetPenalty() << endl;
 }
+
+

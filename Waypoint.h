@@ -22,6 +22,7 @@ private:
 	int x;
 	int y;
 	int penalty;
+	int total_waypoints;
 	
 public:
 
@@ -34,12 +35,14 @@ public:
 	const int GetX(void);
 	const int GetY(void);
 	const int GetPenalty(void);
+	const int GetTotal_Waypoints(void);
 
 	//Mutators
 	bool SetWaypoint_Num(int new_num);
 	bool SetX(int new_x);
 	bool SetY(int new_y);
 	bool SetPenalty(int new_penalty);
+	bool SetTotal_Waypoints(int new_total_waypoints);
 
 	void print_waypoint(void);
 };

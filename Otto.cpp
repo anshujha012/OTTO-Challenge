@@ -112,14 +112,14 @@ int Otto::calculate_quickest_path(int x1, int y1, int penalty1, int x2, int y2) 
 	if(time_to_point < (time_to_next_point + penalty1)) {
 
 		//Return 1 to move to the next waypoint
-		cout << "Chose next\n";
+		//cout << "Chose next\n";
 		return 1;
 	} else {
 
 		//Return 2 to skip the next waypoint
 		//Penalty + move time is less then the move time to the adjacent waypoint
 		//If the two times are equal, we want to move to the furthest point to be efficient
-		cout << "Chose skip\n";
+		//cout << "Chose skip\n";
 		return 2;
 	}
 }
