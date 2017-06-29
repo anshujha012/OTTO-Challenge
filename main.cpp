@@ -21,14 +21,84 @@ int main() {
 
 	Waypoint Waypoints[MAXWAYPOINTSETS][MAXWAYPOINTS];
   Otto Robot;
+  int x1, y1, penalty1, x2, y2 = 0;
+  int path_route = 0;
+  float elapsed_time = 0.0;
 
   parse_text_file(Waypoints);
 
+
   for (int i = 0; i < MAXWAYPOINTSETS; i++) {
   	for (int j = 0; j < MAXWAYPOINTSETS; j++) {
-  		if (Waypoints[i][j].GetWaypoint_Num() > 0)
-	   		Waypoints[i][j].print_waypoint(); 
-  	}	   	
+
+      if (Waypoints[i][j].GetWaypoint_Num() > 0) {
+
+        if (Waypoints[i][j].GetWaypoint_Num() == 1) {
+
+          //Waypoints[i][j].print_waypoint();
+          //Save Otto's info and reset him for next set of waypoints once a new set is reached
+          cout << "-------------------" << endl;
+          cout << "Robot: " << Robot.GetPos_X() << "," << Robot.GetPos_Y() << endl;
+          //cout << Robot.GetElapsed_Time() << endl;
+          Robot.reset_otto();
+        } 
+
+        x1 = Waypoints[i][j].GetX();
+        y1 =  Waypoints[i][j].GetY();
+        penalty1 = Waypoints[i][j].GetPenalty();
+        
+        if(Waypoints[i][j+1].GetWaypoint_Num() != 0) {
+
+          //Get the next point after the adjacent one's coords
+          x2 = Waypoints[i][j+1].GetX();
+          y2 = Waypoints[i][j+1].GetY();
+        } else {
+
+          //Reached the end of the set list, next point is (100,100)
+          x2 = 100;
+          y2 = 100;
+        }    
+          
+        cout << x1 << "," << y1 << " " << penalty1 << "  Next point: " << x2 << "," << y2 << endl;
+        //path_route = Robot.calculate_quickest_path(x1, y1, penalty1, x2, y2);
+
+        /*if(path_route == 1) {
+
+          Robot.move_to_point(x1, y1);
+        } else if (path_route == 2) {
+
+          Robot.move_to_point(x2, y2);
+        }*/
+
+
+        /*if (x2 != 100 && y2 != 100) {
+
+          //Decide which point to move to next
+          //1 = adjacent point, 2 = skip the adjacent point and go to the next one
+          path_route = Robot.calculate_quickest_path(x1, y1, penalty1, x2, y2);
+          if(path_route == 1) {
+
+            //Move to adjacent point, no penalty
+            Robot.move_to_point(x1, y1);
+            
+            //elapsed_time += WAYPOINTWAITTIME + Robot.calculate_elapsed_time(Robot.distance_to_point(x1,y1));        
+          } else if (path_route == 2) {
+
+            //Skip the adjacent point, move to next one and incur the penalty
+            Robot.move_to_point(x2, y2); 
+            
+            //elapsed_time += WAYPOINTWAITTIME + Robot.calculate_elapsed_time(Robot.distance_to_point(x2,y2)) + penalty1;    
+          }     
+        } else {
+
+          //Last point is 100,100 so just move there and wait 10s. No penalty
+          Robot.move_to_point(x2, y2);
+          
+          //elapsed_time += WAYPOINTWAITTIME + Robot.calculate_elapsed_time(Robot.distance_to_point(x2,y2));
+        }*/
+        //cout << "Robot: " << Robot.GetPos_X() << "," << Robot.GetPos_Y() << endl;
+      }
+    }
   }
 
   return 1;
