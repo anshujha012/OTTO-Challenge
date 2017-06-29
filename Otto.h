@@ -47,7 +47,7 @@ public:
 
 	float distance_to_point(int x, int y);
 	void move_to_point(int x, int y);
-	int calculate_quickest_path(int x1, int y1, int penalty1, int x2, int y2, int x3, int y3);
+	int calculate_quickest_path(int x1, int y1, int penalty1, int x2, int y2, int penalty2, int x3, int y3);
 	float calculate_elapsed_time(float distance);
 
 	void reset_otto(void);

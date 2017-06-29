@@ -4,19 +4,19 @@
 //This file contains all of the driver methods for the robot
 
 //valgrind --leak-check=yes ./main
-//sample_input_medium.txt
 
 #include "Waypoint.h"
 #include "Otto.h"
 
 using namespace std;
 
-//Text file Functions
+//Text file functions
 void parse_text_file(Waypoint (&Waypoints)[MAXWAYPOINTSETS][MAXWAYPOINTS]);
 string get_text_file_name();
 void open_text_file(string filename, ifstream &file);
 string tokenize_string(string *s);
 void set_waypoint_info(Waypoint &Waypoints, int waypoint_num, int x, int y, int penalty, int total_waypoints);
+
 void add_time(Otto &Robot, float travel_time, int penalty);
 
 int total_sets = 0;
@@ -25,7 +25,7 @@ int main() {
 
 	Waypoint Waypoints[MAXWAYPOINTSETS][MAXWAYPOINTS];
   Otto Robot;
-  int x1, y1, penalty1, x2, y2 , x3, y3 = 0;
+  int x1, y1, penalty1, x2, y2, penalty2, x3, y3 = 0;
   int path_route = 0;
   int i, j = 0;
   
@@ -50,13 +50,14 @@ int main() {
 
       //Get the next point's coordinates
       x2 = Waypoints[i][j+1].GetX();
-      y2 = Waypoints[i][j+1].GetY(); 
+      y2 = Waypoints[i][j+1].GetY();
+      penalty2 = Waypoints[i][j+1].GetPenalty(); 
 
       //Get the next point's next coordinates
       x3 = Waypoints[i][j+2].GetX();
       y3 = Waypoints[i][j+2].GetY(); 
 
-      path_route = Robot.calculate_quickest_path(x1, y1, penalty1, x2, y2, x3, y3);
+      path_route = Robot.calculate_quickest_path(x1, y1, penalty1, x2, y2, penalty2, x3, y3);
   
       if (path_route == 1) {
 
@@ -73,11 +74,11 @@ int main() {
 
     if (i > 0) {
 
+      //Otto has finished the waypoint set, print his time
       cout.setf(ios::fixed,ios::floatfield);
       cout.precision(3);
       cout << round(Robot.GetElapsed_Time() * 1000)/1000 << endl;
     }
-
   }
 
   return 1;
@@ -141,7 +142,7 @@ void set_waypoint_info(Waypoint &Waypoints, int waypoint_num, int x, int y, int 
 
 string get_text_file_name() {
 
-	string input = "sample_input_medium.txt";
+	string input = "sample_input_small.txt";
 	//string input = "";
   //cout << "Text file name (include '.txt'): \n> ";
  	//getline(cin, input);

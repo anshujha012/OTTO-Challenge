@@ -1,6 +1,6 @@
 //Mike Sadowski
 //June 29th, 2017
-//Waypoint.cpp
+//Otto.cpp
 //This file contains all of the method bodies for the Otto class.
 
 /*
@@ -90,14 +90,19 @@ void Otto::move_to_point(int x, int y) {
 	SetPos_Y(y);
 }
 
-int Otto::calculate_quickest_path(int x1, int y1, int penalty1, int x2, int y2, int x3, int y3) {
+int Otto::calculate_quickest_path(int x1, int y1, int penalty1, int x2, int y2, int penalty2, int x3, int y3) {
 
 	float distance_to_point = 0.0;
 	float distance_to_next_point = 0.0;
-	float distance_to_next_next_point = 0.0;
+	//float distance_to_next_next_point = 0.0;
 	float time_to_point = 0;
 	float time_to_next_point = 0;
-	float time_to_next_next_point = 0;
+	//float time_to_next_next_point = 0;
+
+	/*float distance1 = 0.0;
+	float distance2 = 0.0;
+	float time1 = 0.0;
+	float time2 = 0.0;*/
 
 	//Calculate the time it will take to get to the next point and the point after that from current position
 	distance_to_point = Otto::distance_to_point(x1,y1);
@@ -105,16 +110,21 @@ int Otto::calculate_quickest_path(int x1, int y1, int penalty1, int x2, int y2, 
 	time_to_point = calculate_elapsed_time(distance_to_point);
 	time_to_next_point = calculate_elapsed_time(distance_to_next_point);
 
-	//Calculate if the next point 
-	distance_to_next_next_point = distance_between_points(x2, y2, x3, y3);
+	//Calculate if the next point's next is closer than the next point 
+	/*distance_to_next_next_point = distance_between_points(x2, y2, x3, y3);
 	time_to_next_next_point = calculate_elapsed_time(distance_to_next_next_point);
 
-	if(time_to_point < (time_to_next_point + penalty1)) {
+	distance1 = distance_between_points(x1, y1, x3, y3);
+	distance2 = distance_between_points(x2, y2, x3, y3);
+
+	time1 = calculate_elapsed_time(distance1) + (float)penalty2;
+	time2 = calculate_elapsed_time(distance2) + (float)penalty1;
+*/
+	if (time_to_point < (time_to_next_point + penalty1)){
 
 		//Return 1 to move to the next waypoint
 		return 1;
 	} else {
-
 		//Return 2 to skip the next waypoint
 		return 2;
 	}
