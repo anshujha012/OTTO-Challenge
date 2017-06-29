@@ -57,21 +57,25 @@ int main() {
 
       path_route = Robot.calculate_quickest_path(x1, y1, penalty1, x2, y2);
   
-      //elapsed_time = Robot.calculate_elapsed_time(Robot.distance_to_point(x1, y1));
-
       if (path_route == 1) {
 
         //Best path is the adjacent point, move there
         //Elapsed time is 10s for the wait + the walking time, no penalty
+        elapsed_time += Robot.calculate_elapsed_time(Robot.distance_to_point(x1, y1));
+        elapsed_time += WAYPOINTWAITTIME;
         Robot.move_to_point(x1, y1);
       } else if (path_route == 2) {
 
+        
+        elapsed_time += Robot.calculate_elapsed_time(Robot.distance_to_point(x2, y2));
+        elapsed_time += WAYPOINTWAITTIME;
+        elapsed_time += (float)penalty1;
         Robot.move_to_point(x2, y2);
       }
       
       if (Robot.GetPos_X() == 0 && Robot.GetPos_Y() == 0) {
 
-        cout << "FINISHED\n";
+        cout << "Time: " << elapsed_time << endl;
       }
 
       //Waypoints[i][j].print_waypoint();
