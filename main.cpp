@@ -99,15 +99,15 @@ void add_time(Otto &Robot, float travel_time, int penalty) {
 //Text file Functions
 void parse_text_file(Waypoint (&Waypoints)[MAXWAYPOINTSETS][MAXWAYPOINTS]) {
 
-  std::istringstream line_contents(input);
+  istringstream line_contents(input);
   string token = "";
 	int waypoint_set_index = 0;
 	int waypoint_index = 0;
   int total_waypoints = 0;
   
-  while (std::getline(line_contents, token)) {
+  while (getline(line_contents, token)) {
 
-    if(token.find(" ") == std::string::npos) {
+    if(token.find(" ") == string::npos) {
 
       if(waypoint_set_index != 0) {
 
@@ -158,17 +158,19 @@ string tokenize_string(string *s) {
 
 double round(double val)
 {
-  if( val < 0 ) return ceil(val - 0.5);
+  if( val < 0 ) 
+    return ceil(val - 0.5);
+
   return floor(val + 0.5);
 }
 
 void read_stdin(void) {
   
-   string line;
+   string line = "";
 
     while(cin) {
 
-        if(std::getline(cin,line)) {
+        if(getline(cin, line)) {
             
             input.append(line);
             input.append("\n");
