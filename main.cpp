@@ -101,8 +101,8 @@ void parse_text_file(Waypoint (&Waypoints)[MAXWAYPOINTSETS][MAXWAYPOINTS]) {
 
   istringstream line_contents(input);
   string token = "";
-	int waypoint_set_index = 0;
-	int waypoint_index = 0;
+  int waypoint_set_index = 0;
+  int waypoint_index = 0;
   int total_waypoints = 0;
   
   while (getline(line_contents, token)) {
