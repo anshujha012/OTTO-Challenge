@@ -174,6 +174,6 @@ void read_stdin(void) {
             
       input.append(line);
       input.append("\n");
-      }
     }
+  }
 }
