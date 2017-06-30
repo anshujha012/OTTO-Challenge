@@ -143,10 +143,10 @@ void set_waypoint_info(Waypoint &Waypoints, int waypoint_num, int x, int y, int 
 
 string tokenize_string(string *s) {
 
-	size_t pos = 0;
-	string token = "";
+  size_t pos = 0;
+  string token = "";
 
-	//create a substring from the start of the string to the space
+  //create a substring from the start of the string to the space
   pos = s->find(" ");
   token = s->substr(0, pos);
     
@@ -168,12 +168,12 @@ void read_stdin(void) {
   
    string line = "";
 
-    while(cin) {
+  while(cin) {
 
-        if(getline(cin, line)) {
+    if(getline(cin, line)) {
             
-            input.append(line);
-            input.append("\n");
-        }
+      input.append(line);
+      input.append("\n");
+      }
     }
 }
