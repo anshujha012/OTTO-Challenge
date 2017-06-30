@@ -8,18 +8,24 @@
 #include "Waypoint.h"
 #include "Otto.h"
 
+#include <iostream>     
+#include <sstream>     
+#include <string>
+
 using namespace std;
 
 //Text file functions
 void parse_text_file(Waypoint (&Waypoints)[MAXWAYPOINTSETS][MAXWAYPOINTS]);
-string get_text_file_name();
-void open_text_file(string filename, ifstream &file);
 string tokenize_string(string *s);
 void set_waypoint_info(Waypoint &Waypoints, int waypoint_num, int x, int y, int penalty, int total_waypoints);
+void read_stdin(void);
 
 void add_time(Otto &Robot, float travel_time, int penalty);
 
+void drive_otto(void);
+
 int total_sets = 0;
+string input = "";
 
 int main() {
 
@@ -31,6 +37,7 @@ int main() {
   
   int waypoint_count = 0;
 
+  read_stdin();
   parse_text_file(Waypoints);
 
   //Iterate the sets of waypoints
@@ -79,7 +86,8 @@ int main() {
       cout.precision(3);
       cout << round(Robot.GetElapsed_Time() * 1000)/1000 << endl;
     }
-  }
+  } 
+
   return 1;
 }
 
@@ -91,43 +99,37 @@ void add_time(Otto &Robot, float travel_time, int penalty) {
 //Text file Functions
 void parse_text_file(Waypoint (&Waypoints)[MAXWAYPOINTSETS][MAXWAYPOINTS]) {
 
-	string filename = get_text_file_name();
-	ifstream text_file;
-	string line_contents;
+  std::istringstream line_contents(input);
+  string token = "";
 	int waypoint_set_index = 0;
 	int waypoint_index = 0;
   int total_waypoints = 0;
+  
+  while (std::getline(line_contents, token)) {
 
-	open_text_file(filename, text_file);
+    if(token.find(" ") == std::string::npos) {
 
-    while (getline(text_file, line_contents)) {
+      if(waypoint_set_index != 0) {
 
-        //Find the line with only 1 number on it, that is the new set of waypoints
-        if(line_contents.find(" ") == std::string::npos) {
+          //Append the (100,100) to the end of the list
+          set_waypoint_info(Waypoints[waypoint_set_index][waypoint_index], waypoint_index+1, ENDPOINTX, ENDPOINTY, 0, total_waypoints);
+        } 
 
-          if(waypoint_set_index != 0) {
+        //A new set of waypoints is going to be saved
+        waypoint_set_index++;
+        waypoint_index = 0; 
 
-            //Append the (100,100) to the end of the list
-            set_waypoint_info(Waypoints[waypoint_set_index][waypoint_index], waypoint_index+1, ENDPOINTX, ENDPOINTY, 0, total_waypoints);
-          } 
+        //Add 1 to make up for the added (100,100)
+        total_waypoints = atoi(token.c_str()) + 1;
+        total_sets++;
+      } else {
 
-        	//A new set of waypoints is going to be saved
-        	waypoint_set_index++;
-        	waypoint_index = 0; 
-
-          //Add 1 to make up for the added (100,100)
-          total_waypoints = atoi(line_contents.c_str()) + 1;
-          total_sets++;
-        } else {
-	
-        	//Insert waypoint into array for current set index, then increase the waypoint index to insert next waypoint
-          set_waypoint_info(Waypoints[waypoint_set_index][waypoint_index], waypoint_index+1, atoi(tokenize_string(&line_contents).c_str()), 
-              atoi(tokenize_string(&line_contents).c_str()), atoi(tokenize_string(&line_contents).c_str()), total_waypoints);
-        	waypoint_index++;
+          //Insert waypoint into array for current set index, then increase the waypoint index to insert next waypoint
+          set_waypoint_info(Waypoints[waypoint_set_index][waypoint_index], waypoint_index+1, atoi(tokenize_string(&token).c_str()), 
+              atoi(tokenize_string(&token).c_str()), atoi(tokenize_string(&token).c_str()), total_waypoints);
+          waypoint_index++;
         }
     }
-
-	text_file.close();
 }
 
 void set_waypoint_info(Waypoint &Waypoints, int waypoint_num, int x, int y, int penalty, int total_waypoints) {
@@ -137,23 +139,6 @@ void set_waypoint_info(Waypoint &Waypoints, int waypoint_num, int x, int y, int 
   Waypoints.SetY(y);
   Waypoints.SetPenalty(penalty);
   Waypoints.SetTotal_Waypoints(total_waypoints);
-}
-
-string get_text_file_name() {
-
-	string input = "";
-  cout << "Text file name (include '.txt'): \n> ";
- 	getline(cin, input);
- 	return input;
-}
-
-void open_text_file(string filename, ifstream &file) {
-
-	file.open(filename);
-	if (!file) {
-    	cerr << "> Unable to open file: " << filename << endl;
-		exit(1);
-	} 
 }
 
 string tokenize_string(string *s) {
@@ -175,4 +160,18 @@ double round(double val)
 {
   if( val < 0 ) return ceil(val - 0.5);
   return floor(val + 0.5);
+}
+
+void read_stdin(void) {
+  
+   string line;
+
+    while(cin) {
+
+        if(std::getline(cin,line)) {
+            
+            input.append(line);
+            input.append("\n");
+        }
+    }
 }

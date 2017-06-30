@@ -3,24 +3,6 @@
 //Otto.cpp
 //This file contains all of the method bodies for the Otto class.
 
-/*
-
--start at (0,0) go to wp1, wp2, wp3, etc
--stop for 10s at every waypoint
--end at (100,100) and wait 10s
-
--if your OTTO went straight from waypoint 1 to waypoint 3, skipping waypoint 2, it would incur waypoint 2's penalty.
--cannot go backwards to hit waypoints
--if waypoint 3 lies directly between waypoints 1 and 2, your OTTO can go straight from 1 to 2, right over 3, without stopping. 
-	Since it didn't stop to be loaded, waypoint 3's penalty will not be incurred.
--Because OTTO is a bit slow, it might be advantageous to skip some waypoints and incur their penalty, rather than actually manoeuvring to them. 
-	Given a description of a course, determine OTTO's best (lowest) possible time.
-
--Grid = 100m x 100m
--Speed = 2 m/s
-
-*/
-
 #include "Otto.h"
 
 using namespace std;
