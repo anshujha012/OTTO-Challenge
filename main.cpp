@@ -20,7 +20,7 @@ string tokenize_string(string *s);
 void set_waypoint_info(Waypoint &Waypoints, int waypoint_num, int x, int y, int penalty, int total_waypoints);
 void read_stdin(void);
 
-void add_time(Otto &Robot, float travel_time, int penalty);
+void add_time(Otto &Robot, float travel_distance, int penalty);
 
 void drive_otto(void);
 
@@ -31,7 +31,7 @@ int main() {
 
   Waypoint Waypoints[MAXWAYPOINTSETS][MAXWAYPOINTS];
   Otto Robot;
-  int x1, y1, penalty1, x2, y2, penalty2, x3, y3 = 0;
+  int x1, y1, penalty1, x2, y2 = 0;
   int path_route = 0;
   int i, j = 0;
   
@@ -58,13 +58,8 @@ int main() {
       //Get the next point's coordinates
       x2 = Waypoints[i][j+1].GetX();
       y2 = Waypoints[i][j+1].GetY();
-      penalty2 = Waypoints[i][j+1].GetPenalty(); 
 
-      //Get the next point's next coordinates
-      x3 = Waypoints[i][j+2].GetX();
-      y3 = Waypoints[i][j+2].GetY(); 
-
-      path_route = Robot.calculate_quickest_path(x1, y1, penalty1, x2, y2, penalty2, x3, y3);
+      path_route = Robot.calculate_quickest_path(x1, y1, penalty1, x2, y2);
   
       if (path_route == 1) {
 
@@ -73,8 +68,8 @@ int main() {
         Robot.move_to_point(x1, y1);
       } else if (path_route == 2) {
 
-        //Best path is to skip the adjacent point, move there
-        add_time(Robot, Robot.calculate_elapsed_time(Robot.distance_to_point(x1, y1)), penalty1);
+        //Best path is to skip the adjacent point, move to the immediate point after
+        add_time(Robot, Robot.calculate_elapsed_time(Robot.distance_to_point(x2, y2)), penalty1);
         Robot.move_to_point(x2, y2);
       }
     }
@@ -91,9 +86,9 @@ int main() {
   return 1;
 }
 
-void add_time(Otto &Robot, float travel_time, int penalty) {
+void add_time(Otto &Robot, float travel_distance, int penalty) {
 
-  Robot.increment_elapsed_time(travel_time + (float)penalty + WAYPOINTWAITTIME);
+  Robot.increment_elapsed_time(travel_distance + (float)penalty + WAYPOINTWAITTIME);
 }
 
 //Text file Functions

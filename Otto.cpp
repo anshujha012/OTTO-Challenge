@@ -72,44 +72,39 @@ void Otto::move_to_point(int x, int y) {
 	SetPos_Y(y);
 }
 
-int Otto::calculate_quickest_path(int x1, int y1, int penalty1, int x2, int y2, int penalty2, int x3, int y3) {
+int Otto::calculate_quickest_path(int x1, int y1, int penalty1, int x2, int y2) {
 
-	float distance_to_point = 0.0;
-	float distance_to_next_point = 0.0;
+	float next_to_skip_distance = 0.0;
+	float current_to_skip_distance = 0.0;
 	
-	float time_to_point = 0;
-	float time_to_next_point = 0;
+	float time_next_to_skip = 0;
+	float time_to_skip = 0;
+
+	if (pos_x == 100 && pos_y == 100) {
+
+		//Otto is finished the course if the current point is 100,100
+		return 0;
+	}
+
+	//Calculate distance between the next point and the point after that
+	next_to_skip_distance = Otto::distance_between_points(x1, y1, x2, y2);
+
+	//Calculate the distance between the current point to the skip point
+	current_to_skip_distance = Otto::distance_to_point(x2,y2);
+
+	//Calculate the time it takes to skip the next point
+	time_to_skip = calculate_elapsed_time(current_to_skip_distance);
+
+	//Calculate the time it takes to get from the next point to its next point
+	time_next_to_skip = calculate_elapsed_time(next_to_skip_distance);
+		
+	if (time_next_to_skip <= (time_to_skip + penalty1)) {
 	
-	//float distance1 = 0.0;
-	//float distance2 = 0.0;
-
-	//float time1 = 0.0;
-	//float time2 = 0.0;
-
-	//Calculate the time it will take to get to the next point and the point after that from current position
-	distance_to_point = Otto::distance_to_point(x1,y1);
-	distance_to_next_point = Otto::distance_to_point(x2,y2);	
-	time_to_point = calculate_elapsed_time(distance_to_point);
-	time_to_next_point = calculate_elapsed_time(distance_to_next_point);
-
-	//distance1 = distance_between_points(x1, y1, x3, y3);
-	//distance2 = distance_between_points(x2, y2, x3, y3);
-
-	//time1 = calculate_elapsed_time(distance1) + (float)penalty2;
-	//time2 = calculate_elapsed_time(distance2) + (float)penalty1;
-
-	//if (time1 < time2) {
-
-		//return 1;
-	//} 
-
-	if (time_to_point < (time_to_next_point + penalty1)) {
-
-		//Return 1 to move to the next waypoint
+		//The time it takes to skip the point and the penalty for skipping is higher then the time it takes to go through the point
 		return 1;
 	} else {
 
-		//Return 2 to skip the next waypoint
+		//The time it takes to skip the point and the penalty for skipping is lower then the time it takes to go through the point
 		return 2;
 	}
 }
