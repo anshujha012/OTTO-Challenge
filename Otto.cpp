@@ -76,7 +76,6 @@ int Otto::calculate_quickest_path(int x1, int y1, int penalty1, int x2, int y2) 
 
 	float next_to_skip_distance = 0.0;
 	float current_to_skip_distance = 0.0;
-	
 	float time_next_to_skip = 0;
 	float time_to_skip = 0;
 
@@ -100,11 +99,11 @@ int Otto::calculate_quickest_path(int x1, int y1, int penalty1, int x2, int y2) 
 		
 	if (time_next_to_skip <= (time_to_skip + penalty1)) {
 	
-		//The time it takes to skip the point and the penalty for skipping is higher then the time it takes to go through the point
+		//The time it takes to skip the point plus the penalty for skipping is higher then the time it takes to go through the point
 		return 1;
 	} else {
 
-		//The time it takes to skip the point and the penalty for skipping is lower then the time it takes to go through the point
+		//The time it takes to skip the point plus the penalty for skipping is lower then the time it takes to go through the point
 		return 2;
 	}
 }

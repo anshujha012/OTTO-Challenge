@@ -3,8 +3,6 @@
 //main.cpp
 //This file contains all of the driver methods for the robot
 
-//valgrind --leak-check=yes ./main
-
 #include "Waypoint.h"
 #include "Otto.h"
 
@@ -68,7 +66,7 @@ int main() {
         Robot.move_to_point(x1, y1);
       } else if (path_route == 2) {
 
-        //Best path is to skip the adjacent point, move to the immediate point after
+        //Best path is to skip the adjacent point, move to the immediate point after and incur the penalty for skipping
         add_time(Robot, Robot.calculate_elapsed_time(Robot.distance_to_point(x2, y2)), penalty1);
         Robot.move_to_point(x2, y2);
       }
