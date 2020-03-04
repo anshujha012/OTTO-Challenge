@@ -3,3 +3,8 @@ all:
 
 clean:
 	rm -f solution_executable
+	
+	clean:
+    	rm -f solution_executable
+
+
