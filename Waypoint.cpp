@@ -1,5 +1,5 @@
-//Mike Sadowski
-//June 29th, 2017
+//Anshu Sharma
+//March 3rd 2020
 //Waypoint.cpp
 //This file contains all of the method bodies for the Waypoint class.
 
